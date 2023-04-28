@@ -1,0 +1,89 @@
+body {
+  background-image: url("files/wave.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.centered {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.avatar {
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  margin-right: 20px;
+  opacity: 1;
+}
+
+.status {
+  position: absolute;
+  z-index: 2;
+  bottom: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  opacity: 1;
+}
+
+.nickname {
+  color: white;
+  font-size: calc(16px + 1vw);
+  font-family: sans-serif;
+  opacity: 1;
+}
+
+.comment {
+  color: white;
+  font-size: calc(10px + 1vw);
+  font-family: sans-serif;
+  font-style: italic;
+  margin-top: -10px;
+  opacity: 0.5;
+}
+
+.buttons-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.png-button {
+  display: block;
+  margin-right: 10px;
+  border: none;
+  background-color: transparent;
+}
+
+.png-button:focus {
+  outline: none;
+}
+
+.png-button img {
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
+#music-button img.active {
+  content: url("files/musicOff.png");
+}
+
+* {
+  transition: all 0.25s ease-out;
+}

@@ -1,0 +1,21 @@
+{
+  "name": "richards-discord-status",
+  "version": "1.0.0",
+  "description": "Simple web server to display the status of a discord user",
+  "main": "src/main.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/main.js",
+    "build/start": "tsc & node build/main.js",
+    "start/web": "concurrently \"node build/main.js\" \"lt --port 3000\""
+  },
+  "author": "RichardScull",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/static": "^6.10.1",
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3",
+    "fastify": "^4.17.0",
+    "localtunnel": "^2.0.2"
+  }
+}

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<head>
+  <link rel="stylesheet" href="/index.css" />
+  <meta
+    charset="UTF-8"
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Richard's Discord Status</title>
+</head>
+
+<div class="wave"></div>
+
+<div class="buttons-container">
+  <a href="#" id="music-button" class="png-button">
+    <img src="files/musicOn.png" />
+  </a>
+  <a href="https://github.com/richardscull" class="png-button">
+    <img src="files/github.png" />
+  </a>
+</div>
+
+<div class="centered">
+  <body onload="getDiscordStatus()"></body>
+  <div style="position: relative; display: inline-block">
+    <img id="avatar" class="avatar" />
+    <div id="status" class="status"></div>
+  </div>
+  <div>
+    <a id="nickname-url">
+      <h1 id="nickname" class="nickname"></h1>
+    </a>
+    <p id="comment" class="comment"></p>
+  </div>
+</div>
+
+<audio id="bg-music" loop autoplay>
+  <source src="files/bg-music.mp3" type="audio/mpeg" />
+</audio>
+
+<script>
+  const musicButton = document.getElementById("music-button");
+  musicButton.addEventListener("click", function () {
+    musicButton.querySelector("img").classList.toggle("active");
+    const audio = document.getElementById("bg-music");
+    if (audio.paused) {
+      audio.play();
+    } else {
+      audio.pause();
+    }
+  });
+
+  async function getDiscordStatus() {
+    const url = new URL(window.location.href + "api");
+    console.log(url);
+    await fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        document.getElementById("nickname-url").href =
+          "https://discordapp.com/users/" + data.userId;
+        document.getElementById("nickname").textContent = data.username;
+        document.getElementById("avatar").src = data.avatar;
+        document.getElementById("avatar").style.border = "4px solid white";
+
+        if (data.status == "online") {
+          document.getElementById("status").style.backgroundColor = "#23A559";
+          document.getElementById("comment").textContent =
+            "// Свободен. По любым вопросам пишите в лс."; //You can change this to whatever you want
+        } else if (data.status == "idle") {
+          document.getElementById("status").style.backgroundColor = "#F0B132";
+          document.getElementById("comment").textContent =
+            "// Отошел... Но скоро вернусь."; //This too
+        } else if (data.status == "dnd") {
+          document.getElementById("status").style.backgroundColor = "#F23F43";
+          document.getElementById("comment").textContent =
+            "// Чем-то занят. Не беспокоить."; //And this
+        } else if (data.status == "offline") {
+          document.getElementById("status").style.backgroundColor = "grey";
+          document.getElementById("comment").textContent =
+            "// Сплю... Отвечу по возможности."; //And even this :D
+        } else {
+          document.getElementById("status").style.backgroundColor = "white";
+          document.getElementById("comment").textContent = "// Неизвестно...";
+        }
+
+        document.getElementById("status").style.border = "4px solid white";
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+</script>
