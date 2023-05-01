@@ -113,16 +113,24 @@
 
           switch (data.activity.type) {
             case 0:
-              activityField.textContent = `${PLAYING}\n └─ ${data.activity.name} ${data.activity.details}`;
+              activityField.textContent = `${PLAYING}\n └─ ${
+                data.activity.name
+              } ${data.activity.details ? data.activity.details : ""}`;
               break;
             case 1:
-              activityField.textContentt = `${STREAMING}\n └─ ${data.activity.name} ${data.activity.details}`;
+              activityField.textContentt = `${STREAMING}\n └─ ${
+                data.activity.name
+              } ${data.activity.details ? data.activity.details : ""}`;
               break;
             case 2:
-              activityField.textContent = `${LISTENING}\n └─ ${data.activity.details} — ${data.activity.state}`;
+              activityField.textContent = `${LISTENING}\n └─ ${
+                data.activity.details
+              } — ${data.activity.state ? data.activity.state : ""}`;
               break;
             case 3:
-              activityField.textContent = `${WATCHING}\n └─ ${data.activity.name} ${data.activity.details}`;
+              activityField.textContent = `${WATCHING}\n └─ ${
+                data.activity.name
+              } ${data.activity.details ? data.activity.details : ""}`;
               break;
           }
         }
