@@ -24,13 +24,14 @@
   <body onload="getDiscordStatus()"></body>
   <div style="position: relative; display: inline-block">
     <img id="avatar" class="avatar" />
-    <div id="status" class="status"></div>
+    <div id="status-circle" class="status"></div>
   </div>
   <div>
     <a id="nickname-url">
       <h1 id="nickname" class="nickname"></h1>
     </a>
-    <p id="comment" class="comment"></p>
+    <p id="status-comment" class="comment"></p>
+    <p id="activity" class="activity" style="white-space: pre-wrap"></p>
   </div>
 </div>
 
@@ -50,39 +51,77 @@
     }
   });
 
+  const PLAYING = "🕹️ Играет в:";
+  const STREAMING = "🎥 Стримит:";
+  const LISTENING = "🎶 Слушает:";
+  const WATCHING = "📺 Смотрит:";
+
+  const ONLINE_COMMENT = "Свободен. По любым вопросам пишите в ЛС.";
+  const IDLE_COMMENT = "Временно недоступен, но скоро буду снова в сети.";
+  const DND_COMMENT = "Занят делами, но постараюсь ответить по возможности.";
+  const OFFLINE_COMMENT = "Отдыхаю, ответчу позже.";
+
+  const UNDEFINED_COMMENT = "Неизвестный статус.";
+
   async function getDiscordStatus() {
     const url = new URL(window.location.href + "api");
+
     await fetch(url)
       .then((response) => response.json())
       .then((data) => {
         document.getElementById("nickname-url").href =
           "https://discordapp.com/users/" + data.userId;
         document.getElementById("nickname").textContent = data.username;
-        document.getElementById("avatar").src = data.avatar;
-        document.getElementById("avatar").style.border = "4px solid white";
 
-        if (data.status == "online") {
-          document.getElementById("status").style.backgroundColor = "#23A559";
-          document.getElementById("comment").textContent =
-            "// Свободен. По любым вопросам пишите в лс."; //You can change this to whatever you want
-        } else if (data.status == "idle") {
-          document.getElementById("status").style.backgroundColor = "#F0B132";
-          document.getElementById("comment").textContent =
-            "// Отошел... Но скоро вернусь."; //This too
-        } else if (data.status == "dnd") {
-          document.getElementById("status").style.backgroundColor = "#F23F43";
-          document.getElementById("comment").textContent =
-            "// Чем-то занят. Не беспокоить."; //And this
-        } else if (data.status == "offline") {
-          document.getElementById("status").style.backgroundColor = "grey";
-          document.getElementById("comment").textContent =
-            "// Сплю... Отвечу по возможности."; //And even this :D
-        } else {
-          document.getElementById("status").style.backgroundColor = "white";
-          document.getElementById("comment").textContent = "// Неизвестно...";
+        const avatarImage = document.getElementById("avatar");
+        avatarImage.src = data.avatar;
+        avatarImage.style.border = "4px solid white";
+
+        const statusField = document.getElementById("status-comment");
+        const statusCircle = document.getElementById("status-circle");
+
+        switch (data.status) {
+          case "online":
+            statusColor = "#23A559";
+            statusField.textContent = "💭 " + ONLINE_COMMENT;
+            break;
+          case "idle":
+            statusColor = "#F0B132";
+            statusField.textContent = "🪴 " + IDLE_COMMENT;
+            break;
+          case "dnd":
+            statusColor = "#F23F43";
+            statusField.textContent = "⛔ " + DND_COMMENT;
+            break;
+          case "offline":
+            statusColor = "#747F8D";
+            statusField.textContent = "💤 " + OFFLINE_COMMENT;
+            break;
+          default:
+            statusColor = "#FFFFFF";
+            statusField.textContent = "⚠️ " + UNDEFINED_COMMENT;
+            break;
         }
 
-        document.getElementById("status").style.border = "4px solid white";
+        statusCircle.style.backgroundColor = statusColor;
+        statusCircle.style.border = "4px solid white";
+
+        const activityField = document.getElementById("activity");
+
+        switch (data.activity.type) {
+          case 0:
+            activityField.textContent = `${PLAYING}\n └─ ${data.activity.name} ${data.activity.details}`;
+            break;
+          case 1:
+            activityField.textContentt = `${STREAMING}\n └─ ${data.activity.name} ${data.activity.details}`;
+            break;
+          case 2:
+            activityField.textContent = `${LISTENING}\n └─ ${data.activity.details} — ${data.activity.state}`;
+            break;
+          case 3:
+            activityField.textContent = `${WATCHING}\n └─ ${data.activity.name} ${data.activity.details}`;
+            break;
+        }
       })
       .catch((error) => {
         console.error("Error:", error);

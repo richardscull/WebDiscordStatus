@@ -1,4 +1,4 @@
-import { Client, Events, GatewayIntentBits, Partials } from "discord.js";
+import { Activity, Client, Events, GatewayIntentBits } from "discord.js";
 import Fastify from "fastify";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -9,6 +9,7 @@ interface DiscordStatus {
   username: string;
   status: string;
   avatar: string;
+  activity?: Activity;
   userId: string;
 }
 
@@ -19,7 +20,11 @@ async function discordHandle() {
     throw new Error("Missing environment variables");
 
   const client = new Client({
-    intents: [GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences],
+    intents: [
+      GatewayIntentBits.GuildMembers,
+      GatewayIntentBits.GuildPresences,
+      GatewayIntentBits.Guilds,
+    ],
   });
   await client.login(TOKEN).catch((err) => {
     throw err;
@@ -35,6 +40,7 @@ async function discordHandle() {
     username: member.user.username,
     status: member.presence ? member.presence.status : "offline",
     avatar: member.user.displayAvatarURL(),
+    activity: member.presence?.activities[0],
     userId: USERID,
   };
 
@@ -45,6 +51,7 @@ async function discordHandle() {
       username: newPresence.user.username,
       status: newPresence.status,
       avatar: newPresence.user.displayAvatarURL(),
+      activity: member.presence?.activities[0],
       userId: USERID,
     };
   });
