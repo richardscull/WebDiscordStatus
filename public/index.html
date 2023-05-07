@@ -46,9 +46,11 @@
   const musicButton = document.getElementById("music-button");
   const themeButton = document.getElementById("theme-changer");
 
+  const audio = document.getElementById("bg-music");
+  audio.volume = 0.25;
+
   musicButton.addEventListener("click", function () {
     musicButton.querySelector("img").classList.toggle("active");
-    const audio = document.getElementById("bg-music");
     if (audio.paused) {
       audio.play();
     } else {
