@@ -106,7 +106,7 @@ a {
 }
 
 #music-button img.active {
-  content: url("files/svg/musicOff.svg");
+  content: url("files/svg/musicOn.svg");
 }
 
 * {
