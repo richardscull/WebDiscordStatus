@@ -49,8 +49,15 @@
   const audio = document.getElementById("bg-music");
   audio.volume = 0.25;
 
+  audio.addEventListener("pause", function () {
+    musicButton.querySelector("img").classList.remove("active");
+  });
+
+  audio.addEventListener("play", function () {
+    musicButton.querySelector("img").classList.add("active");
+  });
+
   musicButton.addEventListener("click", function () {
-    musicButton.querySelector("img").classList.toggle("active");
     if (audio.paused) {
       audio.play();
     } else {
