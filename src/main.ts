@@ -1,4 +1,5 @@
 import { Activity, Client, Events, GatewayIntentBits } from "discord.js";
+import { AddressInfo } from "net";
 import Fastify from "fastify";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -73,13 +74,15 @@ async function startServer() {
 
   fastify.listen({ port: 3000 }, (err, _) => {
     if (err) throw err;
+
+    const { port } = fastify.server.address() as AddressInfo;
+    console.log(`Server listening on port ${port} 🚀`);
   });
 }
 
 async function main() {
   await discordHandle();
   await startServer();
-  console.log("Server started on port 3000 🚀");
 }
 
 main();
