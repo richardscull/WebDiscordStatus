@@ -1,5 +1,11 @@
 body {
-  background-image: url("files/wave.svg");
+  background-image: url("files/svg/waveWhite.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body.black-background {
+  background-image: url("files/svg/waveBlack.svg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -17,11 +23,22 @@ a {
   height: 100vh;
 }
 
+.theme img.white {
+  filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(41deg) brightness(106%)
+    contrast(106%);
+}
+
+.theme.white {
+  color: white;
+  border-color: #18191a;
+}
+
 .avatar {
   position: relative;
   z-index: 1;
-  border-radius: 50%;
   margin-right: 20px;
+  border: 0px solid #e3e5e8;
+  border-radius: 50%;
   opacity: 1;
 }
 
@@ -32,12 +49,12 @@ a {
   right: 10px;
   width: 40px;
   height: 40px;
+  border: 0px solid #e3e5e8;
   border-radius: 50%;
   opacity: 1;
 }
 
 .nickname {
-  color: white;
   font-size: calc(16px + 1vw);
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
@@ -46,7 +63,6 @@ a {
 }
 
 .comment {
-  color: white;
   font-size: calc(10px + 1vw);
   font-family: Arial, Helvetica, sans-serif;
   margin-top: -15px;
@@ -54,7 +70,6 @@ a {
 }
 
 .activity {
-  color: white;
   font-size: calc(10px + 1vw);
   font-family: Arial, Helvetica, sans-serif;
   font-style: italic;
@@ -91,7 +106,7 @@ a {
 }
 
 #music-button img.active {
-  content: url("files/musicOff.png");
+  content: url("files/svg/musicOff.svg");
 }
 
 * {

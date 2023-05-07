@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <link rel="stylesheet" href="/index.css" />
+  <link rel="stylesheet" href="index.css" />
   <meta
     charset="UTF-8"
     name="viewport"
@@ -9,29 +9,32 @@
   <title>Richard's Discord Status</title>
 </head>
 
-<div class="wave"></div>
-
-<div class="buttons-container">
+<div class="buttons-container theme">
   <a id="music-button" class="png-button">
-    <img src="files/musicOn.png" />
+    <img src="files/svg/musicOn.svg" />
+  </a>
+  <a id="theme-changer" class="png-button">
+    <img src="files/svg/theme-light-dark.svg" />
   </a>
   <a href="https://github.com/richardscull" class="png-button">
-    <img src="files/github.png" />
+    <img src="files/svg/github.svg" />
   </a>
 </div>
 
 <div class="centered">
-  <body onload="getDiscordStatus()"></body>
+  <body id="bg" onload="getDiscordStatus()"></body>
+
   <div style="position: relative; display: inline-block">
-    <img id="avatar" class="avatar" />
-    <div id="status-circle" class="status"></div>
+    <img id="avatar" width="128" height="128" class="avatar theme" />
+    <div id="status-circle" class="status theme"></div>
   </div>
+
   <div>
     <a id="nickname-url">
-      <h1 id="nickname" class="nickname"></h1>
+      <h1 id="nickname" class="nickname theme"></h1>
     </a>
-    <p id="status-comment" class="comment"></p>
-    <p id="activity" class="activity" style="white-space: pre-wrap"></p>
+    <p id="status-comment" class="comment theme"></p>
+    <p id="activity" class="activity theme" style="white-space: pre-wrap"></p>
   </div>
 </div>
 
@@ -41,6 +44,8 @@
 
 <script>
   const musicButton = document.getElementById("music-button");
+  const themeButton = document.getElementById("theme-changer");
+
   musicButton.addEventListener("click", function () {
     musicButton.querySelector("img").classList.toggle("active");
     const audio = document.getElementById("bg-music");
@@ -49,6 +54,18 @@
     } else {
       audio.pause();
     }
+  });
+
+  themeButton.addEventListener("click", function () {
+    document.querySelectorAll(".theme img").forEach(function (img) {
+      img.classList.toggle("white");
+    });
+
+    document.querySelectorAll(".theme").forEach(function (el) {
+      el.classList.toggle("white");
+    });
+
+    document.body.classList.toggle("black-background");
   });
 
   const PLAYING = "🕹️ Играет в:";
@@ -75,7 +92,7 @@
 
         const avatarImage = document.getElementById("avatar");
         avatarImage.src = data.avatar;
-        avatarImage.style.border = "4px solid white";
+        avatarImage.style.borderWidth = "4px";
 
         const statusField = document.getElementById("status-comment");
         const statusCircle = document.getElementById("status-circle");
@@ -104,7 +121,7 @@
         }
 
         statusCircle.style.backgroundColor = statusColor;
-        statusCircle.style.border = "4px solid white";
+        statusCircle.style.borderWidth = "4px";
 
         if (data.activity) {
           document.getElementById("nickname").style.marginTop = "50px";
