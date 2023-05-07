@@ -40,7 +40,7 @@ async function discordHandle() {
   discordStatus = {
     username: member.user.username,
     status: member.presence ? member.presence.status : "offline",
-    avatar: member.user.displayAvatarURL(),
+    avatar: member.user.displayAvatarURL({ size: 4096 }),
     activity: member.presence?.activities[0],
     userId: USERID,
   };
@@ -51,7 +51,7 @@ async function discordHandle() {
     discordStatus = {
       username: newPresence.user.username,
       status: newPresence.status,
-      avatar: newPresence.user.displayAvatarURL(),
+      avatar: newPresence.user.displayAvatarURL({ size: 4096 }),
       activity: member.presence?.activities[0],
       userId: USERID,
     };
