@@ -58,7 +58,7 @@
     }
   });
 
-  themeButton.addEventListener("click", function () {
+  function changeWebsiteTheme() {
     document.querySelectorAll(".theme img").forEach(function (img) {
       img.classList.toggle("white");
     });
@@ -68,7 +68,13 @@
     });
 
     document.body.classList.toggle("black-background");
-  });
+  }
+
+  themeButton.addEventListener("click", changeWebsiteTheme);
+
+  if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    changeWebsiteTheme();
+  }
 
   const PLAYING = "🕹️ Играет в:";
   const STREAMING = "🎥 Стримит:";
