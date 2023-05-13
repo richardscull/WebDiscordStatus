@@ -8,6 +8,8 @@ dotenv.config();
 
 const { TOKEN, USERID, GUILDID } = process.env;
 
+export let userStatus: DiscordStatus;
+
 export interface DiscordStatus {
   username: string;
   status: string;
@@ -32,7 +34,7 @@ async function initDiscordBot(token: string) {
   return client;
 }
 
-async function getUserStatus(client: Client) {
+async function updateUserStatus(client: Client) {
   if (!USERID || !GUILDID) throw new Error("Missing environment variables");
 
   const guild = await client.guilds.fetch(GUILDID);
@@ -41,7 +43,7 @@ async function getUserStatus(client: Client) {
   const member = await guild.members.fetch(USERID);
   if (!member) throw new Error("Member not found");
 
-  return {
+  userStatus = {
     username: member.user.username,
     status: member.presence ? member.presence.status : "offline",
     avatar: member.user.displayAvatarURL({ size: 4096 }),
@@ -54,7 +56,7 @@ function sendDiscordStatusUpdates(client: Client, fastify: FastifyInstance) {
   client.on(Events.PresenceUpdate, (_, newPresence) => {
     if (newPresence.userId !== USERID || !newPresence.user) return;
 
-    const userStatus = {
+    userStatus = {
       username: newPresence.user.username,
       status: newPresence.status,
       avatar: newPresence.user.displayAvatarURL({ size: 4096 }),
@@ -74,9 +76,12 @@ function sendDiscordStatusUpdates(client: Client, fastify: FastifyInstance) {
   if (!TOKEN) throw new Error("Missing TOKEN environment variable");
 
   const client = await initDiscordBot(TOKEN);
-  const status = await getUserStatus(client);
+  await updateUserStatus(client);
 
-  const websocketServer = await initServer(status);
+  const websocketServer = await initServer();
 
   sendDiscordStatusUpdates(client, websocketServer);
-})();
+})().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
