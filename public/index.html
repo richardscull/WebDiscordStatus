@@ -134,10 +134,10 @@
     statusCircle.style.backgroundColor = statusColor;
     statusCircle.style.borderWidth = "4px";
 
+    const activityField = document.getElementById("activity");
+
     if (data.activity) {
       document.getElementById("nickname").style.marginTop = "50px";
-
-      const activityField = document.getElementById("activity");
 
       switch (data.activity.type) {
         case 0:
@@ -161,6 +161,9 @@
           }`;
           break;
       }
+    } else {
+      document.getElementById("nickname").style.marginTop = "0px";
+      activityField.textContent = "";
     }
   }
 </script>
