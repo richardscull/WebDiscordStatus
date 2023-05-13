@@ -1,12 +1,14 @@
 import { Activity, Client, Events, GatewayIntentBits } from "discord.js";
-import { AddressInfo } from "net";
-import Fastify from "fastify";
+import WebSocket from "ws";
 import * as dotenv from "dotenv";
+import { FastifyInstance } from "fastify/types/instance";
+import { initServer } from "./webServer";
+
 dotenv.config();
 
 const { TOKEN, USERID, GUILDID } = process.env;
 
-interface DiscordStatus {
+export interface DiscordStatus {
   username: string;
   status: string;
   avatar: string;
@@ -14,12 +16,7 @@ interface DiscordStatus {
   userId: string;
 }
 
-let discordStatus: DiscordStatus;
-
-async function discordHandle() {
-  if (!TOKEN || !USERID || !GUILDID)
-    throw new Error("Missing environment variables");
-
+async function initDiscordBot(token: string) {
   const client = new Client({
     intents: [
       GatewayIntentBits.GuildMembers,
@@ -27,9 +24,16 @@ async function discordHandle() {
       GatewayIntentBits.Guilds,
     ],
   });
-  await client.login(TOKEN).catch((err) => {
+
+  await client.login(token).catch((err) => {
     throw err;
   });
+
+  return client;
+}
+
+async function getUserStatus(client: Client) {
+  if (!USERID || !GUILDID) throw new Error("Missing environment variables");
 
   const guild = await client.guilds.fetch(GUILDID);
   if (!guild) throw new Error("Guild not found");
@@ -37,52 +41,42 @@ async function discordHandle() {
   const member = await guild.members.fetch(USERID);
   if (!member) throw new Error("Member not found");
 
-  discordStatus = {
+  return {
     username: member.user.username,
     status: member.presence ? member.presence.status : "offline",
     avatar: member.user.displayAvatarURL({ size: 4096 }),
     activity: member.presence?.activities[0],
     userId: USERID,
   };
+}
 
+function sendDiscordStatusUpdates(client: Client, fastify: FastifyInstance) {
   client.on(Events.PresenceUpdate, (_, newPresence) => {
     if (newPresence.userId !== USERID || !newPresence.user) return;
 
-    discordStatus = {
+    const userStatus = {
       username: newPresence.user.username,
       status: newPresence.status,
       avatar: newPresence.user.displayAvatarURL({ size: 4096 }),
-      activity: member.presence?.activities[0],
+      activity: newPresence.activities[0],
       userId: USERID,
     };
+
+    fastify.websocketServer.clients.forEach((client) => {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(JSON.stringify(userStatus) + "\n\n");
+      }
+    });
   });
 }
 
-async function startServer() {
-  const fastify = Fastify({
-    logger: false,
-  });
+(async () => {
+  if (!TOKEN) throw new Error("Missing TOKEN environment variable");
 
-  fastify.get("/api", async (_, reply) => {
-    await reply.send(discordStatus);
-  });
+  const client = await initDiscordBot(TOKEN);
+  const status = await getUserStatus(client);
 
-  fastify.register(require("@fastify/static"), {
-    root: __dirname + "/../public",
-    prefix: "/",
-  });
+  const websocketServer = await initServer(status);
 
-  fastify.listen({ port: 3000 }, (err, _) => {
-    if (err) throw err;
-
-    const { port } = fastify.server.address() as AddressInfo;
-    console.log(`Server listening on port ${port} 🚀`);
-  });
-}
-
-async function main() {
-  await discordHandle();
-  await startServer();
-}
-
-main();
+  sendDiscordStatusUpdates(client, websocketServer);
+})();
