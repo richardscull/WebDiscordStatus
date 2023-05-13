@@ -1,6 +1,6 @@
 {
   "name": "richards-discord-status",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Simple web server to display the status of a discord user",
   "main": "src/main.ts",
   "scripts": {
@@ -13,9 +13,16 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/static": "^6.10.1",
+    "@fastify/websocket": "^8.0.0",
+    "concurrently": "^8.0.1",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
-    "localtunnel": "^2.0.2"
+    "localtunnel": "^2.0.2",
+    "typescript": "^5.0.4",
+    "ws": "^8.13.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.4"
   }
 }
