@@ -1,9 +1,9 @@
 import { AddressInfo } from "net";
 import Fastify from "fastify";
 import fastifyWs from "@fastify/websocket";
-import { DiscordStatus } from "./main";
+import { userStatus } from "./main";
 
-export async function initServer(userStatus: DiscordStatus) {
+export async function initServer() {
   const fastify = Fastify({
     logger: false,
   });
