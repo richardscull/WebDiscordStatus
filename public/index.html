@@ -24,7 +24,7 @@
 
 <div class="centered">
   <div style="position: relative; display: inline-block">
-    <img id="avatar" width="128" height="128" class="avatar theme" />
+    <img id="avatar" width="256" height="256" class="avatar theme" />
     <div id="status-circle" class="status theme"></div>
   </div>
 
@@ -103,7 +103,7 @@
 
     const avatarImage = document.getElementById("avatar");
     avatarImage.src = data.avatar;
-    avatarImage.style.borderWidth = "4px";
+    avatarImage.style.borderWidth = "8px";
 
     const statusField = document.getElementById("status-comment");
     const statusCircle = document.getElementById("status-circle");
@@ -132,7 +132,7 @@
     }
 
     statusCircle.style.backgroundColor = statusColor;
-    statusCircle.style.borderWidth = "4px";
+    statusCircle.style.borderWidth = "8px";
 
     const activityField = document.getElementById("activity");
 
