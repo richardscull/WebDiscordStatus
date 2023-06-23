@@ -4,7 +4,7 @@
 </h1>
 <h4 align="center">Create a simple webpage that allows people to check your Discord status quickly and easily. Whether it's your status or someone else's, this page should provide a user-friendly interface for users to see whether Discord is up and running without having to navigate to the Discord status website.<h4>
 
-# Additional preporation 🛠️
+# Additional preparation 🛠️
 
 To utilize this feature, please ensure that you have a valid Discord bot and you are on the same server as the bot.
 
